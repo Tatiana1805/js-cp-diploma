@@ -1,6 +1,6 @@
 let seanceData = localStorage.getItem('seance-data');
 let parsedSeances = JSON.parse(seanceData);
-// console.log(parseSeancesInfo);
+
 
 let stepWrapper = document.querySelector('.conf-step__wrapper');
 let infoTitle = document.querySelector('.buying__info-title');
@@ -28,7 +28,6 @@ function () {
         acceptinButton.setAttribute('disabled', 'disabled');
     }
 
-    // console.log(arrChairs)
 
     chairs.forEach((el) => {
         el.addEventListener('click', function (event) {
@@ -61,7 +60,6 @@ function () {
             }
             arrChair.push({ row: rowIndex, place: placeIndex, type: typePlace });
 
-            // console.log(arrChair);
         });
 
         parsedSeances.hallConfig = stepWrapper.innerHTML;

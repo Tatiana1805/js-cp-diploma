@@ -1,13 +1,13 @@
 let seanceInfo = localStorage.getItem('seance-data');
 let parseSeancesInfo = JSON.parse(seanceInfo);
 
-fetch("https://jscp-diplom.netoserver.ru/", {
-	method: "POST",
-	headers: {
-		'Content-Type': 'application/x-www-form-urlencoded'
-	},
-	body: `event=sale_add&timestamp=${parseSeancesInfo.seanceTimeStamp}&hallId=${parseSeancesInfo.hallId}&seanceId=${parseSeancesInfo.seanceId}&hallConfiguration=${parseSeancesInfo.hallConfig}`
-});
+// fetch("https://jscp-diplom.netoserver.ru/", {
+// 	method: "POST",
+// 	headers: {
+// 		'Content-Type': 'application/x-www-form-urlencoded'
+// 	},
+// 	body: `event=sale_add&timestamp=${parseSeancesInfo.seanceTime}&hallId=${parseSeancesInfo.hallId}&seanceId=${parseSeancesInfo.seanceId}&hallConfiguration=${parseSeancesInfo.hallConfig}`
+// });
 
 function qrCode (){
 const ticketTitle = document.querySelector('.ticket__title')

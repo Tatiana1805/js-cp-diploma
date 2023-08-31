@@ -45,21 +45,16 @@ ticketCost.textContent = cost;
 //         window.location.href = 'ticket.html'
 //     })
 // })
-// const button = document.querySelector('.acceptin-button')
-// button.addEventListener('click', (e) => {
-// //     //    let xhr = new XMLHttpRequest();
-
-// //     //     xhr.open("POST", "https://jscp-diplom.netoserver.ru/");
-// //     //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-// //     //     xhr.send(updateRequest);
-        
-// fetch("https://jscp-diplom.netoserver.ru/", {
-// 	method: "POST",
-// 	headers: {
-// 		'Content-Type': 'application/x-www-form-urlencoded'
-// 	},
-// 	body: `event=sale_add&timestamp=${parseSeancesInfo.seanceTimeStamp}&hallId=${parseSeancesInfo.hallId}&seanceId=${parseSeancesInfo.seanceId}&hallConfiguration=${parseSeancesInfo.hallConfig}`
-// });
-// })
+const button = document.querySelector('.acceptin-button')
+button.addEventListener('click', (e) => {
+        e.preventDefault()
+fetch("https://jscp-diplom.netoserver.ru/", {
+	method: "POST",
+	headers: {
+		'Content-Type': 'application/x-www-form-urlencoded'
+	},
+	body: `event=sale_add&timestamp=${parseSeancesInfo.seanceTimeStamp}&hallId=${parseSeancesInfo.hallId}&seanceId=${parseSeancesInfo.seanceId}&hallConfiguration=${parseSeancesInfo.hallConfig}`
+});
+})
 // console.log(button)
 // console.log(updateRequest)

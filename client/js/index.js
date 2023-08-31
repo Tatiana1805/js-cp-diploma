@@ -2,41 +2,41 @@ document.addEventListener("DOMContentLoaded", () => {
 	let dayWeek = document.querySelectorAll('.page-nav__day-week');
 	let dayNumber = document.querySelectorAll('.page-nav__day-number');
 	let navDays = document.querySelectorAll('.page-nav__day');
-  
-	dayNumber.forEach(function (el, index) {
-	  let day = new Date();
-	  day.setDate(day.getDate() + index);
-	  el.textContent = day.getDate();
-	  dayWeek[index].textContent = weekDays(day);
-	  let navDay = el.parentNode;
-	  if (dayWeek[index].textContent === 'Сб' || dayWeek[index].textContent === 'Вс') {
-		navDay.classList.add('page-nav__day_weekend');
-	  } else {
-		navDay.classList.remove('page-nav__day_weekend');
-	  }
+
+	dayNumber.forEach(function(el, index) {
+		let day = new Date();
+		day.setDate(day.getDate() + index);
+		el.textContent = day.getDate();
+		dayWeek[index].textContent = weekDays(day);
+		let navDay = el.parentNode;
+		if (dayWeek[index].textContent === 'Сб' || dayWeek[index].textContent === 'Вс') {
+			navDay.classList.add('page-nav__day_weekend');
+		} else {
+			navDay.classList.remove('page-nav__day_weekend');
+		}
 	});
-  
+
 	function weekDays(date) {
-	  let daysOfWeek = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-	  return daysOfWeek[date.getDay()];
+		let daysOfWeek = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+		return daysOfWeek[date.getDay()];
 	}
-  
-	createRequest('POST', 'https://jscp-diplom.netoserver.ru/', 'event=update', function (response) {
-	  let films = response.films.result;
-	  let halls = response.halls.result.filter((openhalls) => openhalls.hall_open !== 0);
-	  let arrSeances = response.seances.result;
-  
-	  let main = document.querySelector('main');
-	  main.innerHTML = '';
-  
-	  for (let film of films) {
-		let hallSeances = '';
-		halls.forEach(function (hall) {
-		  let seances = arrSeances.filter((seance) => (seance.seance_filmid == film.film_id) && (seance.seance_hallid == hall.hall_id));
-  
-		  if (seances.length > 0) {
-  
-			hallSeances += `<div class="movie-seances__hall">
+
+	createRequest('POST', 'https://jscp-diplom.netoserver.ru/', 'event=update', function(response) {
+		let films = response.films.result;
+		let halls = response.halls.result.filter((openhalls) => openhalls.hall_open !== 0);
+		let arrSeances = response.seances.result;
+
+		let main = document.querySelector('main');
+		main.innerHTML = '';
+
+		for (let film of films) {
+			let hallSeances = '';
+			halls.forEach(function(hall) {
+				let seances = arrSeances.filter((seance) => (seance.seance_filmid == film.film_id) && (seance.seance_hallid == hall.hall_id));
+
+				if (seances.length > 0) {
+
+					hallSeances += `<div class="movie-seances__hall">
 			 <h3 class="movie-seances__hall-title">${hall.hall_name}</h3>
 			 <ul class="movie-seances__list">
 			   ${seances.map(seance => `
@@ -50,12 +50,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			   `)}
 			 </ul>          
 		   </div>`
-		  }
-  
-		});
-  
-		if (hallSeances) {
-		  main.innerHTML += `<section class="movie">
+				}
+
+			});
+
+			if (hallSeances) {
+				main.innerHTML += `<section class="movie">
 			 <div class="movie__info">
 			   <div class="movie__poster">
 				 <img class="movie__poster-image" alt='${film.film_name}' src="${film.film_poster}">
@@ -71,58 +71,58 @@ document.addEventListener("DOMContentLoaded", () => {
 			 </div>  
 			 ${hallSeances}
 		   </section>`
+			}
 		}
-	  }
-  
-	  let seanceTime = document.querySelectorAll('.movie-seances__time');
-  
-	  function dateSeance() {
-  
+
+		let seanceTime = document.querySelectorAll('.movie-seances__time');
+
+		function dateSeance() {
+
+			seanceTime.forEach((time) => {
+				let seanceStart = +time.dataset.seanceStart;
+				let selectedDay = document.querySelector('.page-nav__day_chosen');
+				let selectedDayInd = Array.from(navDays).indexOf(selectedDay);
+				let selectedDate = new Date();
+				selectedDate.setDate(selectedDate.getDate() + selectedDayInd);
+				selectedDate.setHours(0, 0, 0);
+				let seanceTime = Math.floor(selectedDate.getTime() / 1000) + seanceStart * 60;
+				time.dataset.seanceTimeStamp = seanceTime;
+				let todayTime = new Date();
+				let currentTime = Math.round(todayTime.getTime() / 1000);
+				if (currentTime > seanceTime) {
+					time.classList.add("acceptin-button-disabled");
+				} else {
+
+					time.classList.remove("acceptin-button-disabled");
+				}
+			});
+		}
+
+		for (let navDay of navDays) {
+			navDay.addEventListener('click', function(e) {
+				e.preventDefault();
+				let selectedDay = document.querySelector('.page-nav__day_chosen');
+				if (selectedDay) {
+					selectedDay.classList.remove('page-nav__day_chosen');
+				}
+				navDay.classList.add('page-nav__day_chosen');
+				dateSeance();
+			})
+		}
+
+		dateSeance();
+
 		seanceTime.forEach((time) => {
-		  let seanceStart = +time.dataset.seanceStart;
-		  let selectedDay = document.querySelector('.page-nav__day_chosen');
-		  let selectedDayInd = Array.from(navDays).indexOf(selectedDay);
-		  let selectedDate = new Date();
-		  selectedDate.setDate(selectedDate.getDate() + selectedDayInd);
-		  selectedDate.setHours(0, 0, 0);
-		  let seanceTime = Math.floor(selectedDate.getTime() / 1000) + seanceStart * 60;
-		  time.dataset.seanceTimeStamp = seanceTime;
-		  let todayTime = new Date();
-		  let currentTime = Math.round(todayTime.getTime() / 1000);
-		  if (currentTime > seanceTime) {
-			time.classList.add("acceptin-button-disabled");
-		  } else {
-  
-			time.classList.remove("acceptin-button-disabled");
-		  }
+			time.addEventListener('click', function(event) {
+				let hallId = event.target.dataset.hallId;
+				let selectedHall = halls.find((hall) => hall.hall_id == hallId);
+				let selectedSeance = {
+					...event.target.dataset,
+					hallConfig: selectedHall.hall_config
+				};
+				let jsonSeance = JSON.stringify(selectedSeance);
+				localStorage.setItem('seance-data', jsonSeance);
+			});
 		});
-	  }
-  
-	  for (let navDay of navDays) {
-		navDay.addEventListener('click', function (e) {
-		  e.preventDefault();
-		  let selectedDay = document.querySelector('.page-nav__day_chosen');
-		  if (selectedDay) {
-			selectedDay.classList.remove('page-nav__day_chosen');
-		  }
-		  navDay.classList.add('page-nav__day_chosen');
-		  dateSeance();
-		})
-	  }
-  
-	  dateSeance();
-  
-	  seanceTime.forEach((time) => {
-		time.addEventListener('click', function (event) {
-		  let hallId = event.target.dataset.hallId;
-		  let selectedHall = halls.find((hall) => hall.hall_id == hallId);
-		  let selectedSeance = {
-			...event.target.dataset,
-			hallConfig: selectedHall.hall_config
-		  };
-		  let jsonSeance = JSON.stringify(selectedSeance);
-		  localStorage.setItem('seance-data', jsonSeance);
-		});
-	  });
 	});
-  });
+});

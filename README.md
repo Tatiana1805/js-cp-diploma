@@ -53,7 +53,7 @@ QRCreator.js - JavaScript библиотека для создания QR-код
 
 ### GitHub Pages
 
-
+https://tatiana1805.github.io/js-cp-diploma/
 
 **Исходный проект задания:**
 
